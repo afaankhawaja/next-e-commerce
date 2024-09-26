@@ -5,23 +5,25 @@ import { NextResponse } from 'next/server';
 // API for fetching products
 export async function GET(request) {
   try {
-    await dbConnect(); // Ensure DB connection is established
+    await dbConnect();
 
-    // Extract category from the query string
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
+    const search = searchParams.get('search');
 
-    let products;
+    let query = {};
 
     if (category) {
-      // Fetch products by category if category is provided
-      products = await Product.find({ category });
-    } else {
-      // Fetch all products if no category is provided
-      products = await Product.find({});
+      query.category = category; // Filter by category
+    }
+    
+    if (search) {
+      query.title = { $regex: search, $options: 'i' }; // Case insensitive search
     }
 
-    return NextResponse.json(products); // Send products back to the client
+    const products = await Product.find(query); // Fetch products based on the constructed query
+
+    return NextResponse.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
     return new NextResponse('Internal Server Error', { status: 500 });

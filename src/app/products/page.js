@@ -1,16 +1,25 @@
 "use client";
-
 import ProductCard from '@/components/ProductCard';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-async function fetchProducts(category) {
+async function fetchProducts(category, search) {
   try {
     let url = 'http://localhost:3000/api/products';
-    if (category) {
-      url += `?category=${encodeURIComponent(category)}`;
-    }
     
+    const queryParams = new URLSearchParams(); 
+
+    if (category) {
+      queryParams.append('category', category);
+    }
+    if (search) {
+      queryParams.append('search', search);
+    }
+
+    if (queryParams.toString()) {
+      url += `?${queryParams.toString()}`; 
+    }
+
     const res = await fetch(url, { next: { revalidate: 60 } });
     
     if (!res.ok) {
@@ -26,16 +35,21 @@ async function fetchProducts(category) {
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const category = searchParams.get('category'); 
+  const searchQuery = searchParams.get('search'); 
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    console.log('Search Query:', searchQuery);
+    console.log('Category:', category);
     async function getProducts() {
-      const data = await fetchProducts(category);
+      const data = await fetchProducts(category, searchQuery); 
+      console.log('Fetched Products:', data);
       setProducts(data);
     }
 
     getProducts();
-  }, [category]);
+  }, [category, searchQuery]); 
 
   return (
     <div className="container mx-auto px-4 py-8">
