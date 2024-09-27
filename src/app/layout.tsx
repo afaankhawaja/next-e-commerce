@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { CartProvider } from '@/context/CartContext';
+import { Suspense } from 'react';
+
 
 
 const geistSans = localFont({
@@ -33,8 +35,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
+          <Suspense fallback={<div>Loading...</div>}>
         <Navbar />
         {children}
+        </Suspense>
         </CartProvider>
       </body>
     </html>

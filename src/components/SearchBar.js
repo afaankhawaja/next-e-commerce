@@ -1,10 +1,12 @@
-"use client";
+'use client';
+
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -12,15 +14,13 @@ export const SearchBar = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/products?search=${encodeURIComponent(searchQuery)}`); // Update the URL with the search query
+    router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
   };
 
-  // Use effect to set the search query from the URL
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const search = params.get('search');
+    const search = searchParams.get('search');
     setSearchQuery(search || '');
-  }, [window.location.search]);
+  }, [searchParams]);
 
   return (
     <form onSubmit={handleSubmit} className="my-4 flex w-1/2">
