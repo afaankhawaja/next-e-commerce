@@ -3,6 +3,7 @@ import ProductCard from '@/components/ProductCard';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+
 async function fetchProducts(category, search) {
   try {
     let url = 'http://localhost:3000/api/products';
@@ -33,6 +34,7 @@ async function fetchProducts(category, search) {
 }
 
 export default function ProductsPage() {
+
   const searchParams = useSearchParams();
   const category = searchParams.get('category'); 
   const searchQuery = searchParams.get('search'); 

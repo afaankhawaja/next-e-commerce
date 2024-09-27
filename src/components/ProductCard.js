@@ -2,8 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useCart } from '@/context/CartContext';
 
 const ProductCard = ({ product }) => {
+  const {addToCart} = useCart();
   return (
     <Card className="flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="p-4">
@@ -30,7 +32,7 @@ const ProductCard = ({ product }) => {
         </p>
       </CardContent>
       <CardFooter className="p-4">
-        <Button className="w-full">Add to Cart</Button>
+        <Button onClick={() => addToCart(product)} className="w-full">Add to Cart</Button>
       </CardFooter>
     </Card>
   );
